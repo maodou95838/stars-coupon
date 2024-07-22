@@ -1,5 +1,9 @@
 package io.github.coupon.template.api.beans.rules;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * Discount
  *
@@ -7,6 +11,9 @@ package io.github.coupon.template.api.beans.rules;
  * @date 2024/7/15 19:35
  * @version 1.0
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Discount {
 
     /**

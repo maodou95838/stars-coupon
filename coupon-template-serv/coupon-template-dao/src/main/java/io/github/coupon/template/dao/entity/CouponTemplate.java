@@ -41,7 +41,7 @@ public class CouponTemplate implements Serializable {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "ship_id", nullable = false)
+    @Column(name = "shop_id", nullable = false)
     private Long shopId;
 
 

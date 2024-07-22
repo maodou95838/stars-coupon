@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
 @SpringBootApplication
 @ComponentScan(basePackages = {"io.github.coupon.template"})
 @EnableJpaAuditing
-@EntityScan(basePackages = {"io.github.coupon"})
-@EnableJpaRepositories(basePackages = {"io.github.coupon"})
+@EntityScan(basePackages = {"io.github.coupon.template"})
+@EnableJpaRepositories(basePackages = {"io.github.coupon.template"})
 @Slf4j
 public class TemplateServiceApplication {
 
