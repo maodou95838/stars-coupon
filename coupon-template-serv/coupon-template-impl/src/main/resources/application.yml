@@ -62,3 +62,4 @@ spring:
 logging:
   level:
     io.github.coupon: debug
+

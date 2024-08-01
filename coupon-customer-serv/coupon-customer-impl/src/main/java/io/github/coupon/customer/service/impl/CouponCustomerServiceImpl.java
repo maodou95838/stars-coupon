@@ -4,17 +4,17 @@ import com.google.common.collect.Lists;
 import io.github.coupon.calc.api.beans.ShoppingCart;
 import io.github.coupon.calc.api.beans.SimulationOrder;
 import io.github.coupon.calc.api.beans.SimulationResponse;
-import io.github.coupon.calc.service.CouponCalculationService;
 import io.github.coupon.customer.api.beans.RequestCoupon;
 import io.github.coupon.customer.api.beans.SearchCoupon;
 import io.github.coupon.customer.api.enums.CouponStatus;
 import io.github.coupon.customer.dao.CouponDao;
 import io.github.coupon.customer.dao.entity.Coupon;
+import io.github.coupon.customer.feign.CalculationService;
+import io.github.coupon.customer.feign.TemplateService;
 import io.github.coupon.customer.service.CouponConverter;
 import io.github.coupon.customer.service.CouponCustomerService;
 import io.github.coupon.template.api.beans.CouponInfo;
 import io.github.coupon.template.api.beans.CouponTemplateInfo;
-import io.github.coupon.template.impl.service.CouponTemplateService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,15 @@ public class CouponCustomerServiceImpl implements CouponCustomerService {
 
     @Override
     public Coupon requestCoupon(RequestCoupon request) {
-        CouponTemplateInfo templateInfo = templateService.loadTemplateInfo(request.getCouponTemplateId());
+//        CouponTemplateInfo templateInfo = templateService.loadTemplateInfo(request.getCouponTemplateId());
+//        CouponTemplateInfo templateInfo = webClientBuilder.build()
+//                .get()
+//                .uri("http://coupon-template-serv/template/getTemplate?id=" + request.getCouponTemplateId())
+//                .retrieve()
+//                .bodyToMono(CouponTemplateInfo.class)
+//                .block();
+
+        CouponTemplateInfo templateInfo = templateService.getTemplate(request.getCouponTemplateId());
 
         // 模板不存在则报错
         if (templateInfo == null) {
@@ -96,12 +104,12 @@ public class CouponCustomerServiceImpl implements CouponCustomerService {
                     .orElseThrow(() -> new RuntimeException("Coupon not found"));
 
             CouponInfo couponInfo = CouponConverter.convert2Coupon(coupon);
-            couponInfo.setTemplate(templateService.loadTemplateInfo(coupon.getTemplateId()));
+            couponInfo.setTemplate(templateService.getTemplate(couponInfo.getTemplateId()));
             order.setCouponInfos(Lists.newArrayList(couponInfo));
         }
 
         // order清算
-        ShoppingCart checkoutInfo = calculationService.calculateOrderPrice(order);
+        ShoppingCart checkoutInfo = calculationService.checkout(order);
 
         if (coupon != null) {
             // 如果优惠券没有被结算掉，而用户传递了优惠券，报错提示该订单满足不了优惠条件
@@ -137,14 +145,14 @@ public class CouponCustomerServiceImpl implements CouponCustomerService {
             if (couponOptional.isPresent()) {
                 Coupon coupon = couponOptional.get();
                 CouponInfo couponInfo = CouponConverter.convert2Coupon(coupon);
-                couponInfo.setTemplate(templateService.loadTemplateInfo(coupon.getTemplateId()));
+                couponInfo.setTemplate(templateService.getTemplate(coupon.getTemplateId()));
                 couponInfos.add(couponInfo);
             }
         }
         order.setCouponInfos(couponInfos);
 
         // 调用接口试算服务
-        return calculationService.simulateOrder(order);
+        return calculationService.simulate(order);
     }
 
     @Override
@@ -182,7 +190,8 @@ public class CouponCustomerServiceImpl implements CouponCustomerService {
         List<Long> templateIds = coupons.stream()
                 .map(Coupon::getTemplateId)
                 .collect(Collectors.toList());
-        Map<Long, CouponTemplateInfo> templateMap = templateService.getTemplateInfoMap(templateIds);
+//        Map<Long, CouponTemplateInfo> templateMap = templateService.getTemplateInfoMap(templateIds);
+        Map<Long, CouponTemplateInfo> templateMap = templateService.getTemplateInBatch(templateIds);
         coupons.stream().forEach(e -> e.setTemplateInfo(templateMap.get(e.getTemplateId())));
 
         return coupons.stream()
@@ -193,10 +202,20 @@ public class CouponCustomerServiceImpl implements CouponCustomerService {
     @Autowired
     private CouponDao couponDao;
 
-    @Autowired
-    private CouponTemplateService templateService;
 
     @Autowired
-    private CouponCalculationService calculationService;
+    private TemplateService templateService;
+
+    @Autowired
+    private CalculationService calculationService;
+
+//    @Autowired
+//    private WebClient.Builder webClientBuilder;
+
+//    @Autowired
+//    private CouponTemplateService templateService;
+//
+//    @Autowired
+//    private CouponCalculationService calculationService;
 
 }
