@@ -43,15 +43,33 @@ public class CouponTemplateController {
 
 
     @GetMapping("/getBatch")
-    @SentinelResource(value = "getTemplateInBatch", blockHandler = "getTemplateInBatch_block")
+    @SentinelResource(value = "getTemplateInBatch",
+            blockHandler = "getTemplateInBatch_block",
+            fallback = "getTemplateInBatch_fallback")
     public Map<Long, CouponTemplateInfo> getTemplateInBatch(
             @RequestParam("ids") Collection<Long> ids) {
         log.info("getTemplateInBatch: {}", JSON.toJSONString(ids));
         return templateService.getTemplateInfoMap(ids);
     }
 
+    /**
+     * 限流逻辑
+     * @param ids
+     * @param blockException
+     * @return
+     */
     public Map<Long, CouponTemplateInfo> getTemplateInBatch_block(Collection<Long> ids, BlockException blockException) {
         log.info("限流逻辑");
+        return Maps.newHashMap();
+    }
+
+    /**
+     * 降级逻辑
+     * @param ids
+     * @return
+     */
+    public Map<Long, CouponTemplateInfo> getTemplateInBatch_fallback(Collection<Long> ids) {
+        log.info("接口被降级");
         return Maps.newHashMap();
     }
 

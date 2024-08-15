@@ -62,6 +62,14 @@ spring:
       transport:
         dashboard: localhost:8080
         port: 8719
+      datasource:
+        stars-flow:
+          nacos:
+            server-addr: localhost:8848
+            namespace: dev
+            groupId: SENTINEL_GROUP
+            dataId: ${spring.application.name}-flow-rules
+            rule-type: flow
 
 logging:
   level:
