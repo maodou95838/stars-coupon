@@ -59,6 +59,11 @@ spring:
         # 如果只消费服务，不作为服务提供方，倒是可以设置成false，减少开销
         register-enabled: true
 
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: localhost:8080
+
 logging:
   level:
     io.github.coupon: debug

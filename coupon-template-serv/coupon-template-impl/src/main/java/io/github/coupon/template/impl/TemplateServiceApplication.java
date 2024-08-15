@@ -1,6 +1,7 @@
 package io.github.coupon.template.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -41,7 +42,7 @@ public class TemplateServiceApplication {
                 .filter(e -> e.contains("coupon")).collect(Collectors.toList());
        filtedNames.forEach(e -> log.info(e));
 
-        System.out.println("成功启动");
+        System.out.println("成功启动! port = " + context.getEnvironment().getProperty("server.port"));
     }
 
 

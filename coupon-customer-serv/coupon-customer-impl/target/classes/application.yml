@@ -4,8 +4,8 @@ server:
     include-message: always
 
 spring:
-  application:
-    name: coupon-customer-serv
+#  application:
+#    name: coupon-customer-serv
 #  datasource:
 #    username: root
 #    password: 123456
@@ -36,7 +36,7 @@ spring:
         # Nacos的服务注册地址，可以配置多个，逗号分隔
         server-addr: 192.168.3.99:8748,192.168.3.99:8948
         # 服务注册到Nacos上的名称，一般不用配置
-#        service: coupon-template-serv
+        service: coupon-template-serv
         # nacos客户端向服务端发送心跳的时间间隔，时间单位其实是ms
         heart-beat-interval: 5000
         # 服务端没有接受到客户端心跳请求就将其设为不健康的时间间隔，默认为15s
@@ -58,6 +58,10 @@ spring:
         # 向注册中心注册服务，默认为true
         # 如果只消费服务，不作为服务提供方，倒是可以设置成false，减少开销
         register-enabled: true
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+        port: 8719
 
 logging:
   level:

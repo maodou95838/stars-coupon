@@ -1,5 +1,6 @@
 package io.github.coupon.customer.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import io.github.coupon.calc.api.beans.ShoppingCart;
 import io.github.coupon.calc.api.beans.SimulationOrder;
 import io.github.coupon.calc.api.beans.SimulationResponse;
@@ -30,6 +31,7 @@ import java.util.List;
 public class CouponCustomerController {
 
     @PostMapping("requestCoupon")
+    @SentinelResource(value = "requestCoupon")
     public Coupon requestCoupon(@RequestBody RequestCoupon request) {
         if (disableCoupon) {
             log.info("暂停领取优惠券");
@@ -40,6 +42,7 @@ public class CouponCustomerController {
     }
 
     @PostMapping("/findCoupon")
+    @SentinelResource(value = "customer-findCoupon")
     public List<CouponInfo> findCoupon(SearchCoupon request) {
         return customerService.findCoupon(request);
     }
