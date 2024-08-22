@@ -63,6 +63,11 @@ spring:
       transport:
         port: 8719
         dashboard: localhost:8080
+  sleuth:
+    sampler:
+      rate: 1000
+      probability: 1.0
+
 
 logging:
   level:

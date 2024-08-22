@@ -74,12 +74,11 @@
                 <version>16.0</version>
             </dependency>
 
+            <!--gateway-->
 <!--            <dependency>-->
-<!--                <groupId>com.h2database</groupId>-->
-<!--                <artifactId>h2</artifactId>-->
-<!--                <scope>test</scope>-->
+<!--                <groupId>org.springframework.cloud</groupId>-->
+<!--                <artifactId>spring-cloud-starter-gateway</artifactId>-->
 <!--            </dependency>-->
-
         </dependencies>
 
 
